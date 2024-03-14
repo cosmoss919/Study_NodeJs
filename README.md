@@ -10,4 +10,8 @@ Node.js 공부한 내용에 대한 리포지토리입니다.
 - Visual Studio Code
 - 네이버 웨일
 
+<br/>
+
+## 사용언어
+- Javascript
 
