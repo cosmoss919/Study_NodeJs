@@ -10,6 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.21"
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "prettier": "^3.3.3",
+    "sample-package": "file:sample-package"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
