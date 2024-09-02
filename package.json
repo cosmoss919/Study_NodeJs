@@ -13,6 +13,8 @@
     "axios": "^1.7.5",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.6.0",
     "prettier": "^3.3.3",
     "sample-package": "file:sample-package"
   },
