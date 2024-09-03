@@ -1,4 +1,4 @@
-const calc = require('Node.js 백인드 백엔드 개발자 되기/sample-package');
+const calc = require('Node.js 백엔드 개발자 되기/sample-package');
 
 const a = 17;
 const b = 3;
