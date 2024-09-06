@@ -46,8 +46,40 @@
 
     <!--버튼 영역-->
     <div>
-        <button type="submit">저장</button>
-        <button type="button" onclick="location.href='/'">취소</button>
+        {{#if (eq mode "create")}}
+            <button type="submit">저장</button>
+        {{/if}}
     </div>
     </form>
+    <div>
+        {{#if (eq mode "modify")}}
+            <button onclick="checkPassword()">수정 저장</button>
+        {{/if}}
+        <button type="button" onclick="location.href='/'">취소</button>
+    </div>
 </div>
+
+<script>
+    // 비밀번호 유효성 검사
+    async function checkPassword() {
+        var password = document.forms["boardForm"]["password"].value;
+
+        const result = await fetch("/check-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "{{post._id}}", password})
+        });
+
+        const data = await result.json();
+
+        if(data.isExist) {
+            document.forms["boardForm"].action = "/modify"; // action을 동적으로 설정
+            document.forms["boardForm"].submit();
+        } else {
+            alert("패스워드가 올바르지 않습니다.");
+            return;
+        }        
+    }
+</script>
