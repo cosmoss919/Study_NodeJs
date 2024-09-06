@@ -6,7 +6,7 @@ module.exports = ({totalCount, page, perPage = 10}) => {
     const totalPage = Math.ceil(totalCount / perPage); // 총 페이지 수 계산
 
     // 시작 페이지 : 몫 * PAGE_LIST_SIZE + 1
-    let quotient = page / PAGE_LIST_SIZE;
+    let quotient = Math.floor(page / perPage);
     if(page % PAGE_LIST_SIZE === 0) {
         quotient -= 1;
     }

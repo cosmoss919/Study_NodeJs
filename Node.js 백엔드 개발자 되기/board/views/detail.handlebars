@@ -14,10 +14,11 @@
 </div>
 <section>
     <div>
-        <h3>3개의 댓글이 있습니다.</h3>      <!--댓글 개수 표시-->
+        <h3>{{lengthOfList comments}}개의 댓글이 있습니다.</h3>
     </div>
 
     <form method="post" action="/write-comment">    <!--댓글 작성 폼-->
+        <input type="hidden" name="id" value="{{_id}}" />
         <div>
             <div>
                 <input type="text" name="name" placeholder="이름" />
@@ -32,24 +33,25 @@
         </div>
     </form>
 </section>
-{{/with}}
 
 <!--댓글 표시 영역-->
 <section>
+    {{#each comments}}
     <div>
         <div>
-            작성자 : <b>댓글 작성자</b>
+            작성자 : <b>{{name}}</b>
         </div>
         <div>
-            작성 일시 : 2022-01-01 00:00:00
-            <button onclick="deleteComment('1')">삭제</button>
+            작성 일시 : {{dateString createdDt}}
+            <button onclick="deleteComment('{{idx}}')">삭제</button>
         </div>
     </div>
     <div>
         <pre>{{comment}}</pre>
     </div>
+    {{/each}}
 </section>
-
+{{/with}}
 <footer>
     <div>
         <a href="/">목록으로</a>    <!--목록으로 가는 링크-->
@@ -114,5 +116,27 @@
         }
 
         document.location = "/";
+    }
+
+    async function deleteComment(idx) {
+        const password = prompt(`댓글을 삭제하려면 패스워드를 입력해주세요`);
+        if(!password) {
+            return;
+        }
+
+        alert(`${postId} ${idx} ${password}`);
+        const result = await fetch("/delete-comment", {
+            ...deleteOption,
+            body: JSON.stringify({id: "{{post._id}}", idx, password})
+        });
+
+        const data = await result.json();
+        if(!data.isSuccess) {
+            alert("삭제에 실패했습니다. 패스워드를 확인해주세요.");
+            return;
+        }
+
+        alert("삭제 성공!");
+        document.location.reload();
     }
 </script>

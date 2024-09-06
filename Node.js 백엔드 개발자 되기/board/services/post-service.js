@@ -1,6 +1,15 @@
 const paginator = require("../utils/paginator");
 const {ObjectId} = require("mongodb");
 
+// 패스워드는 노출 할 필요가 없으므로 결과값으로 가져오지 않음
+const projectionOption = {
+    projection: {
+        // 프로젝션(투영) 결과값에 일부만 가져올 때 사용
+        password: 0,
+        "comments.password": 0,
+    },
+};
+
 // 글쓰기
 async function writePost(collection, post) {
     // 생성일시와 조회수를 넣어줍니다.
@@ -25,15 +34,6 @@ async function list(collection, page, search) {
     const paginatorObj = paginator({totalCount, page, perPage: perPage});
     return [posts, paginatorObj];
 }
-
-// 패스워드는 노출 할 필요가 없으므로 결과값으로 가져오지 않음
-const projectionOption = {
-    projection: {
-        // 프로젝션(투영) 결과값에 일부만 가져올 때 사용
-        password: 0,
-        "comments.password": 0,
-    },
-};
 
 async function getDetailPost(collection, id) {
     // 몽고디비 Collection의 findOneAndUpdate() 함수를 사용
@@ -63,6 +63,7 @@ async function updatePost(collection, id, post) {
 
 
 module.exports = {  // require()로 파일을 임포트 시 외부로 노출하는 객체
+    projectionOption,
     list,
     writePost,
     getDetailPost,
