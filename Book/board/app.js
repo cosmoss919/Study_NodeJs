@@ -153,7 +153,7 @@ app.post("/write-comment",async (req, res) => {
     return res.redirect(`/detail/${id}`);
 });
 
-app.post("/delete-comment", async (req, res) => {
+app.delete("/delete-comment", async (req, res) => {
     const {id, idx, password} = req.body;
     const post = await collection.findOne(
         {
@@ -167,7 +167,7 @@ app.post("/delete-comment", async (req, res) => {
         return res.json({isSuccess: false});
     }
 
-    post.comments = post.comments.filter((comment) => comment.idx !== idx);
+    post.comments = post.comments.filter((comment) => comment.idx !== Number(idx));
     postService.updatePost(collection, id, post);
     return res.json({isSuccess: true});
 });

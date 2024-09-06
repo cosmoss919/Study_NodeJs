@@ -124,7 +124,6 @@
             return;
         }
 
-        alert(`${postId} ${idx} ${password}`);
         const result = await fetch("/delete-comment", {
             ...deleteOption,
             body: JSON.stringify({id: "{{post._id}}", idx, password})
