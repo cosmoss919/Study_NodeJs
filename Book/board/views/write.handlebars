@@ -62,24 +62,33 @@
 <script>
     // 비밀번호 유효성 검사
     async function checkPassword() {
-        var password = document.forms["boardForm"]["password"].value;
+        const password = document.forms["boardForm"]["password"].value;
+        const id = "{{post._id}}";
 
-        const result = await fetch("/check-password", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: "{{post._id}}", password})
-        });
+        try {
+            const response = await fetch("/check-password", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id, password })
+            });
 
-        const data = await result.json();
+            if (!response.ok) {
+                console.error('서버 응답 오류:', response.statusText);
+            }
 
-        if(data.isExist) {
-            document.forms["boardForm"].action = "/modify"; // action을 동적으로 설정
-            document.forms["boardForm"].submit();
-        } else {
-            alert("패스워드가 올바르지 않습니다.");
-            return;
-        }        
+            const { isExist } = await response.json();
+
+            if (isExist) {
+                document.forms["boardForm"].action = "/modify";
+                document.forms["boardForm"].submit();
+            } else {
+                alert("패스워드가 올바르지 않습니다.");
+            }
+        } catch (error) {
+            console.error('오류 발생:', error);
+            alert('비밀번호 확인 중 오류가 발생했습니다.');
+        }
     }
 </script>
