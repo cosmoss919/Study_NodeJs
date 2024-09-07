@@ -28,6 +28,12 @@ app.listen(3000, async () => {
     console.log("MongoDB connected");
 });
 
+// 에러 처리를 위한 공통 함수
+const handleError = (res, redirectUrl) => (error) => {
+    console.error(error);
+    res.redirect(redirectUrl);
+};
+
 // 라우터 설정
 app.get("/", async (req, res) => {
     const page = parseInt(req.query.page) || 1;  //현재 페이지 데이터
@@ -68,31 +74,33 @@ app.get("/modify/:id", async (req, res) => {
 
 // 게시글 수정 API
 app.post("/modify/", async (req, res) => {
+    const {id, title, writer, password, content} = req.body;
+    const post = {
+        title,
+        writer,
+        password,
+        content,
+        createdDt: new Date().toISOString(),
+    };
     try {
-        const {id, title, writer, password, content} = req.body;
-        const post = {
-            title,
-            writer,
-            password,
-            content,
-            createdDt: new Date().toISOString(),
-        };
-        // 업데이트 결과
-        const result = postService.updatePost(collection, id, post);
+        await postService.updatePost(collection, id, post);
         res.redirect(`detail/${id}`);
     } catch (e) {
-        console.error(e);
-        res.redirect(`detail/${id}`);
+        handleError(res, `detail/${id}`)(e);
     }
 });
 
 // 상세 페이지로 이동
 app.get("/detail/:id", async (req, res) => {
-    const result = await postService.getDetailPost(collection, req.params.id);
-    res.render("detail", {
-        title: "테스트 게시판",
-        post: result,
-    });
+    try {
+        const result = await postService.getDetailPost(collection, req.params.id);
+        res.render("detail", {
+            title: "테스트 게시판",
+            post: result,
+        });
+    } catch (e) {
+        handleError(res, "/")(e);
+    }
 });
 
 // 패스워드 체크

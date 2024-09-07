@@ -1,62 +1,126 @@
-<h1>{{title}}</h1>
-{{#with post}}  <!--post 객체를 쉽게 사용하도록 with로 감싸기-->
-    <h2 class="text-xl">{{title}}</h2>  <!--제목-->
-<div>
-    작성자 : <b>{{writer}}</b> <!--작성자-->
-</div>
-<div>
-    조회수 : {{hits}} | 작성일시 : {{dateString createdDt}}    <!--조회수 및 작성일-->
-    <button onclick="modifyPost()">수정</button>
-    <button onclick="deletePost()">삭제</button>
-</div>
-<div>
-    <pre>{{content}}</pre>  <!--본문 내용-->
-</div>
-<section>
-    <div>
-        <h3>{{lengthOfList comments}}개의 댓글이 있습니다.</h3>
-    </div>
+<style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+        color: #333;
+        text-align: center;
+    }
+    .post-info {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .post-content {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .comment-form {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .comment-form input[type="text"],
+    .comment-form input[type="password"],
+    .comment-form textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .comment-list {
+        margin-top: 20px;
+    }
+    .comment {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .home-link {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #007bff;
+        text-decoration: none;
+    }
+</style>
 
-    <form method="post" action="/write-comment">    <!--댓글 작성 폼-->
-        <input type="hidden" name="id" value="{{_id}}" />
-        <div>
-            <div>
-                <input type="text" name="name" placeholder="이름" />
-                <input type="password" name="password" placeholder="비밀번호" />
-            </div>
-            <div>
-                <textarea cols="40" rows="3" name="comment" placeholder="댓글을 입력해 주세요."></textarea>
-
-                <!--댓글 전송 버튼-->
-                <br /><br /><button>댓글쓰기</button>   <!--submit하면 화면이 갱신되므로 Ajax로 작성할 예정-->
-            </div>
+<div class="container">
+    <h1>{{title}}</h1>
+    {{#with post}}
+        <div class="post-info">
+            <h2>{{title}}</h2>
+            <p>작성자: <b>{{writer}}</b></p>
+            <p>조회수: {{hits}} | 작성일시: {{dateString createdDt}}</p>
+            <button class="button" onclick="modifyPost()">수정</button>
+            <button class="button" onclick="deletePost()">삭제</button>
         </div>
-    </form>
-</section>
-
-<!--댓글 표시 영역-->
-<section>
-    {{#each comments}}
-    <div>
-        <div>
-            작성자 : <b>{{name}}</b>
+        <div class="post-content">
+            <pre>{{content}}</pre>
         </div>
-        <div>
-            작성 일시 : {{dateString createdDt}}
-            <button onclick="deleteComment('{{idx}}')">삭제</button>
-        </div>
-    </div>
-    <div>
-        <pre>{{comment}}</pre>
-    </div>
-    {{/each}}
-</section>
-{{/with}}
-<footer>
-    <div>
-        <a href="/">목록으로</a>    <!--목록으로 가는 링크-->
-    </div>
-</footer>
+        <section class="comment-section">
+            <h3>{{lengthOfList comments}}개의 댓글이 있습니다.</h3>
+            <form class="comment-form" method="post" action="/write-comment">
+                <input type="hidden" name="id" value="{{_id}}" />
+                <input type="text" name="name" placeholder="이름" required />
+                <input type="password" name="password" placeholder="비밀번호" required />
+                <textarea name="comment" placeholder="댓글을 입력해 주세요." required></textarea>
+                <button class="button" type="submit">댓글쓰기</button>
+            </form>
+        </section>
+        <section class="comment-list">
+            {{#each comments}}
+                <div class="comment">
+                    <div class="comment-header">
+                        <span>작성자: <b>{{name}}</b></span>
+                        <span>작성 일시: {{dateString createdDt}}</span>
+                    </div>
+                    <pre>{{comment}}</pre>
+                    <button class="button" onclick="deleteComment('{{idx}}')">삭제</button>
+                </div>
+            {{/each}}
+        </section>
+    {{/with}}
+    <a href="/" class="home-link">목록으로</a>
+</div>
 
 <script>
     const postOption = {

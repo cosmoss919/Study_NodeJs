@@ -1,62 +1,122 @@
-<h1>
-    [{{title}}] 글
-    {{#if (eq mode "create")}}
-        작성
-    {{else}}
-        수정
-    {{/if}}
-</h1>
+<style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+    }
+    input[type="text"],
+    input[type="password"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    textarea {
+        min-height: 200px;
+    }
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+    .button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-left: 10px;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .button.cancel {
+        background-color: #6c757d;
+    }
+    .button.cancel:hover {
+        background-color: #545b62;
+    }
+</style>
 
-<div>
-    <!--글쓰기 폼-->
+<div class="container">
+    <h1>
+        [{{title}}] 글
+        {{#if (eq mode "create")}}
+            작성
+        {{else}}
+            수정
+        {{/if}}
+    </h1>
+
     <form name="boardForm" method="post"
           {{#if (eq mode "create")}}
               action="/write"
           {{else}}
               action="/modify"
           {{/if}}>
-    <!--수정 모드인 때는 id값을 폼통해 전송-->
-    {{#if (eq mode "modify")}}
-        <input type="hidden" name="id" value="{{post._id}}" />
-    {{/if}}
-
-    <!--제목 입력 칸-->
-    <div>
-        <label>제목</label>
-        <input type="text" name="title" placeholder="제목을 넣어주세요" value="{{post.title}}" />
-    </div>
-
-    <!--이름 입력 칸-->
-    <div>
-        <label>이름</label>
-        <input type="text" name="writer" placeholder="이름을 넣어주세요" value="{{post.writer}}" />
-    </div>
-
-    <!--비밀번호 입력 칸-->
-    <div>
-        <label>비밀번호</label>
-        <input type="password" name="password" placeholder="비밀번호를 넣어주세요" />
-    </div>
-
-    <!--본문 입력-->
-    <div>
-        <label>본문을 입력하세요</label><br />
-        <textarea placeholder="본문" name="content" cols="50" rows="10">{{post.content}}</textarea>
-    </div>
-
-    <!--버튼 영역-->
-    <div>
-        {{#if (eq mode "create")}}
-            <button type="submit">저장</button>
-        {{/if}}
-    </div>
-    </form>
-    <div>
         {{#if (eq mode "modify")}}
-            <button onclick="checkPassword()">수정 저장</button>
+            <input type="hidden" name="id" value="{{post._id}}" />
         {{/if}}
-        <button type="button" onclick="location.href='/'">취소</button>
-    </div>
+
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" placeholder="제목을 입력해주세요" value="{{post.title}}" required />
+        </div>
+
+        <div class="form-group">
+            <label for="writer">이름</label>
+            <input type="text" id="writer" name="writer" placeholder="이름을 입력해주세요" value="{{post.writer}}" required />
+        </div>
+
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required />
+        </div>
+
+        <div class="form-group">
+            <label for="content">본문</label>
+            <textarea id="content" name="content" placeholder="본문을 입력해주세요" required>{{post.content}}</textarea>
+        </div>
+
+        <div class="button-group">
+            {{#if (eq mode "create")}}
+                <button type="submit" class="button">저장</button>
+            {{else}}
+                <button type="button" class="button" onclick="checkPassword()">수정 저장</button>
+            {{/if}}
+            <button type="button" class="button cancel" onclick="location.href='/'">취소</button>
+        </div>
+    </form>
 </div>
 
 <script>

@@ -1,64 +1,119 @@
 <!-- body 부분만 작성 -->
 
-<h2>{{title}}</h2> <!--타이틀 영역-->
+<style>
+    .search-area {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    #search {
+        width: 70%;
+        border-radius: 4px 0 0 4px;
+    }
+    .search-button {
+        border-radius: 0 4px 4px 0;
+    }
+    .write-link {
+        display: block;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .pagination a {
+        color: #007bff;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+        margin: 0 4px;
+    }
+    .pagination a.active {
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
+    }
+    .pagination a.disabled {
+        color: #6c757d;
+        pointer-events: none;
+    }
+</style>
 
-<!--검색어 영역-->
-<input type="text" name="search" id="search" value="{{search}}" size="50" placeholder="검색어를 입력하세요."/>   <!--value에 검색어 데이터를 넣음-->
-<button onclick="location.href=`/?search=${document.getElementById('search')}`">검색</button> <!--버튼 클릭시 search 변수에 검색어 데이터를 담아서 서버로 보냄-->
-<br />
+<div class="container">
+    <h2>{{title}}</h2>
 
-<!--글쓰기 페이지 이동 링크-->
-<a href="/write"> 글쓰기</a>
-<br />
+    <div class="search-area">
+        <input type="text" name="search" id="search" value="{{search}}" placeholder="검색어를 입력하세요."/>
+        <button class="search-button" onclick="searchPosts()">검색</button>
+    </div>
 
-<!-- 글 목록-->
-<div>
+    <a href="/write" class="write-link">글쓰기</a>
+
     <table>
         <thead>
-        <tr>
-            <th width="50%">제목</th>
-            <th>작성자</th>
-            <th>조회수</th>
-            <th>등록일</th>
-        </tr>
-        </thead>
-        <tbody>     <!--게시글 데이터 표시-->
-        {{#each posts}}
             <tr>
-                <td><a href="/detail/{{_id}}">{{title}}</a> </td>   <!--상세페이지 링크-->
-                <td>{{writer}}</td>
-                <td>{{hits}}</td>
-                <td>{{dateString createdDt}}</td>   <!--dateString 헬퍼 함수 사용-->
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>등록일</th>
             </tr>
-        {{/each}}
+        </thead>
+        <tbody>
+            {{#each posts}}
+                <tr>
+                    <td><a href="/detail/{{_id}}">{{title}}</a></td>
+                    <td>{{writer}}</td>
+                    <td>{{hits}}</td>
+                    <td>{{dateString createdDt}}</td>
+                </tr>
+            {{/each}}
         </tbody>
     </table>
+
+    <div class="pagination">
+        {{#with paginator}}
+            <a href="/?page=1&search={{@root.search}}">&lt;&lt;</a>
+            {{#if hasPrev}}
+                <a href="/?page={{prevPage}}&search={{@root.search}}">&lt;</a>
+            {{else}}
+                <a class="disabled">&lt;</a>
+            {{/if}}
+            {{#each pageList}}
+                {{#if (eq . @root.paginator.page)}}
+                    <a class="active">{{.}}</a>
+                {{else}}
+                    <a href="/?page={{.}}&search={{@root.search}}">{{.}}</a>
+                {{/if}}
+            {{/each}}
+            {{#if hasNext}}
+                <a href="/?page={{nextPage}}&search={{@root.search}}">&gt;</a>
+            {{else}}
+                <a class="disabled">&gt;</a>
+            {{/if}}
+            <a href="/?page={{lastPage}}&search={{@root.search}}">&gt;&gt;</a>
+        {{/with}}
+    </div>
 </div>
 
-<!--페에징 영역-->
-<div>
-    {{#with paginator}} <!--with 내장 헬퍼 함수 사용-->
-        <!--@root 서버의 원본 참조 시 사용-->
-        <a href="/?page=1&search={{@root.search}}">&lt;&lt;</a>
-        {{#if hasPrev}}
-            <a href="/?page=1&search={{@root.search}}">&lt;</a>
-            <!--1페이지 인 경우 이전 페이지가 없으므로 링크가 없음-->
-        {{else}}
-            <a>&lt;</a>
-        {{/if}}
-        {{#each pageList}}
-            {{#if (eq . @root.paginator.page)}} <!--eq 내장 헬퍼 함수 사용-->
-                <a>{{.}}</a>
-            {{else}}
-                <a href="/?page={{.}}&search={{@root.search}}">{{.}}</a>
-            {{/if}}
-        {{/each}}
-        {{#if hasNext}}
-            <a href="./page={{nextPage}}&search={{@root.search}}">&gt;</a>
-            <!--마지막 페이지 인 경우 이전 페이지가 없으므로 링크가 삭제-->
-        {{else}}
-            <a>&gt;</a>
-        {{/if}}
-        <a href="/?page={{lastPage}}&search={{@root.search}}">&gt;&gt;</a>
-    {{/with}}
-</div>
+<script>
+    function searchPosts() {
+        const searchTerm = document.getElementById('search').value;
+        location.href = `/?search=${encodeURIComponent(searchTerm)}`;
+    }
+</script>
