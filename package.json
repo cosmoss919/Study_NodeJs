@@ -10,13 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nestjs/cli": "^10.4.5",
+    "@nestjs/common": "^10.4.1",
+    "@nestjs/platform-express": "^10.4.1",
     "axios": "^1.7.5",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
     "mongoose": "^8.6.0",
     "prettier": "^3.3.3",
-    "sample-package": "file:sample-package"
+    "reflect-metadata": "^0.2.2",
+    "sample-package": "file:sample-package",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "jest": "^29.7.0"
