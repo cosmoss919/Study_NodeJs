@@ -21,7 +21,8 @@
     "prettier": "^3.3.3",
     "reflect-metadata": "^0.2.2",
     "sample-package": "file:sample-package",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"
