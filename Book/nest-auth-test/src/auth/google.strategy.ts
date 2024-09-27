@@ -21,8 +21,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     // OAuth 인증이 끝나고 콜백으로 실행되는 메서드
     async validate(accessToken: string, refreshToken: string, profile: Profile) {
         const { id, name, emails } = profile;
-        console.log(accessToken);
-        console.log(refreshToken);
+        console.log("accessToken : " + accessToken);
+        console.log("refreshToken : " + refreshToken);
 
         const providerId = id;
         const email = emails[0].value;
